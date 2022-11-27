@@ -6,14 +6,14 @@ from torch.utils.data import DataLoader, Dataset
 
 from data.custom_dataset import NeighborsDataset, AugmentedDataset, AugmentedPyramidDataset
 # from data.cifar import CIFAR10, STL10, ImageNet, ImageNetSubset
-from data.data_paths import FLOWERS_DS_UNLABELED, FLOWERS_DS_KAGGLE
+from common import PATHS
 from data.flowers_ds import FlowersDatasets, FlowersDatasetsPyramidImgs
 from data.utils import collate_custom
 
 
 def get_train_dataset(config_params,
                       transform,
-                      root_ds_path: str = FLOWERS_DS_KAGGLE,
+                      root_ds_path: str = PATHS.FLOWERS_DS_KAGGLE,
                       to_augmented_dataset: bool = False,
                       to_neighbors_dataset: bool = False,
                       split: Optional[str] = None,
@@ -68,7 +68,7 @@ def get_train_dataset(config_params,
 
 def get_val_dataset(config_params: dict, transform=None, to_neighbors_dataset=False,
                     pretext_pretrained_path: str = None,
-                    root_ds_path: str = FLOWERS_DS_UNLABELED):
+                    root_ds_path: str = PATHS.FLOWERS_DS_UNLABELED):
     # Base dataset
     if config_params['val_db_name'] == 'flowers-data':
         to_tensor = True  # (p['setup'] != 'scan')

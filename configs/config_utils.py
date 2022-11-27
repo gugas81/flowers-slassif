@@ -5,16 +5,20 @@ Licensed under the CC BY-NC 4.0 license (https://creativecommons.org/licenses/by
 import os
 import yaml
 from easydict import EasyDict
+from common import PATHS
 
 
-def create_config(root_dir_path, config_yaml_file_path, exp_name: str = None):
+class DEFAULT_CONFIGS_PATHS:
+    SCAN_FLOWERS = os.path.join(PATHS.PROJECT_ROOT, 'configs/scan_flowers.yml')
+    SIMCLR_FLOWERS = os.path.join(PATHS.PROJECT_ROOT, 'configs/simclr_flowers.yml')
+
+
+def prepare_config_paths(cfg, root_dir: str = PATHS.OUT_ROOT, exp_name: str = None):
     # Config for environment path
-    with open(root_dir_path, 'r') as stream:
-        root_dir = yaml.safe_load(stream)['root_dir']
-        if exp_name is not None:
-            root_dir = os.path.join(root_dir_path, exp_name)
+    assert os.path.isdir(root_dir)
 
-    cfg = get_config_params(config_yaml_file_path)
+    if exp_name is not None:
+        root_dir = os.path.join(root_dir, exp_name)
 
     # Set paths for pretext task (These directories are needed in every stage)
     base_dir = os.path.join(root_dir, cfg['train_db_name'])
@@ -60,7 +64,7 @@ def create_config(root_dir_path, config_yaml_file_path, exp_name: str = None):
     return cfg
 
 
-def get_config_params(config_yaml_file_path):
+def load_config_params(config_yaml_file_path: str) -> EasyDict:
     with open(config_yaml_file_path, 'r') as stream:
         config = yaml.safe_load(stream)
     cfg = EasyDict()
@@ -68,3 +72,16 @@ def get_config_params(config_yaml_file_path):
     for k, v in config.items():
         cfg[k] = v
     return cfg
+
+
+def get_config_params(config_file_path: str = None, scenario: str = 'scan', data_type: str = 'flowers') -> EasyDict:
+    if config_file_path is None:
+        assert data_type == 'flowers'
+        if scenario == 'scan':
+            config_file_path = DEFAULT_CONFIGS_PATHS.SCAN_FLOWERS
+        elif scenario == 'simclr':
+            config_file_path = DEFAULT_CONFIGS_PATHS.SIMCLR_FLOWERS
+        else:
+            raise NameError(f'Not valid scenario name: {scenario}')
+
+    cfg_params = load_config_params(config_file_path)

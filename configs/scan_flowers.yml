@@ -2,7 +2,7 @@
 setup: scan
 
 # Hyperparameters
-epochs: 200
+epochs: 86
 batch_size: 84
 num_workers: 8
 use_patches: False

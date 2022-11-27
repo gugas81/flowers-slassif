@@ -8,19 +8,20 @@ from sklearn import metrics
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from config import get_config_params
+from common import load_config_params
 from data import NeighborsDataset
 from data import get_val_dataloader, get_val_dataset, get_val_transformations
 from losses import entropy
 from losses import get_criterion
 from models import get_model
 from trainer.memory import MemoryBank
+from configs import get_config_params, prepare_config_paths
 
 
 def scan_eval(config_file_path: str, pretrained_ckpt: str):
-    config_param = get_config_params(config_file_path)
-    val_transformations = get_val_transformations(config_param)
+    config_param = get_config_params(config_file_path=config_file_path, scenario='scan', data_type='flowers')
 
+    val_transformations = get_val_transformations(config_param)
     val_dataset = get_val_dataset(config_param, val_transformations, to_neighbors_dataset=True,
                                   pretext_pretrained_path=pretrained_ckpt)
 

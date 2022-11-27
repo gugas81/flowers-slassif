@@ -9,7 +9,7 @@ from termcolor import colored
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from config import create_config
+from common import create_config
 from data import get_train_dataset, get_val_dataset, get_train_dataloader, get_val_dataloader, \
     get_train_transformations, get_val_transformations
 from losses import get_criterion
@@ -55,7 +55,7 @@ def run_trainer(config_file_path: str,
                 exp_name: str = None,
                 pretrained_ckpt: str = None,
                 dbg_mode: bool = False):
-    # Retrieve config file
+    # Retrieve common file
     p = create_config(config_file_path, config_exp_path, exp_name)
     # p['epochs'] = 165
     if dbg_mode:
