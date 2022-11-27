@@ -13,6 +13,11 @@ class DEFAULT_CONFIGS_PATHS:
     SIMCLR_FLOWERS = os.path.join(PATHS.PROJECT_ROOT, 'configs/simclr_flowers.yml')
 
 
+def save_cfg_yaml(cfg, file_path: str):
+    with open(file_path, 'w') as yaml_file:
+        yaml.dump(cfg, yaml_file, default_flow_style=False)
+
+
 def prepare_config_paths(cfg, root_dir: str = PATHS.OUT_ROOT, exp_name: str = None):
     # Config for environment path
     assert os.path.isdir(root_dir)
@@ -25,6 +30,8 @@ def prepare_config_paths(cfg, root_dir: str = PATHS.OUT_ROOT, exp_name: str = No
     pretext_dir = os.path.join(base_dir, 'pretext')
     os.makedirs(base_dir, exist_ok=True)
     os.makedirs(pretext_dir, exist_ok=True)
+
+    cfg['cfg_path'] = os.path.join(base_dir, 'config.yaml')
     cfg['pretext_dir'] = pretext_dir
     cfg['pretext_checkpoint'] = os.path.join(pretext_dir, 'checkpoint.pth.tar')
     cfg['pretext_model'] = os.path.join(pretext_dir, 'model.pth.tar')
@@ -85,3 +92,4 @@ def get_config_params(config_file_path: str = None, scenario: str = 'scan', data
             raise NameError(f'Not valid scenario name: {scenario}')
 
     cfg_params = load_config_params(config_file_path)
+    return cfg_params

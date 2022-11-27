@@ -1,3 +1,5 @@
+import os.path
+
 import fire
 import numpy as np
 import torch
@@ -18,11 +20,15 @@ from trainer.memory import MemoryBank
 from configs import get_config_params, prepare_config_paths
 
 
-def scan_eval(config_file_path: str, pretrained_ckpt: str):
-    config_param = get_config_params(config_file_path=config_file_path, scenario='scan', data_type='flowers')
+def scan_eval(pretrained_ckpt: str):
+    config_file_path = os.path.join(pretrained_ckpt, 'config.yaml')
+    config_param = get_config_params(config_file_path=config_file_path,
+                                     scenario='scan',
+                                     data_type='flowers')
 
     val_transformations = get_val_transformations(config_param)
-    val_dataset = get_val_dataset(config_param, val_transformations, to_neighbors_dataset=True,
+    val_dataset = get_val_dataset(config_param, val_transformations,
+                                  to_neighbors_dataset=True,
                                   pretext_pretrained_path=pretrained_ckpt)
 
     val_dataloader = get_val_dataloader(config_param, val_dataset)

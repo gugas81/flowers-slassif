@@ -12,7 +12,7 @@ from termcolor import colored
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from configs import get_config_params, prepare_config_paths
+from configs import get_config_params, prepare_config_paths, save_cfg_yaml
 from data import get_train_dataset, get_val_dataset, get_train_dataloader, get_val_dataloader, \
     get_train_transformations, get_val_transformations
 from losses import get_criterion
@@ -28,6 +28,9 @@ def run_scan_trainer(config_file_path: str = None,
     # args = FLAGS.parse_args()
     config_params = get_config_params(config_file_path=config_file_path, scenario='scan', data_type='flowers')
     config_params = prepare_config_paths(cfg=config_params, exp_name=exp_name)
+
+    print(f"Save parsed config in: {config_params['cfg_path']}")
+    save_cfg_yaml(config_params, config_params['cfg_path'])
 
     if dbg_mode:
         config_params['batch_size'] = 32
