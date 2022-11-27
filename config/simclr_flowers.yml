@@ -1,0 +1,69 @@
+# Setup
+setup: simclr-flowers
+
+# Model
+backbone: resnet50
+model_kwargs:
+   head: mlp
+   features_dim: 128
+   use_att: False
+
+# Dataset
+train_db_name: flowers-data
+val_db_name: flowers-data
+num_classes: 5
+
+# Loss
+criterion: simclr
+criterion_kwargs:
+   temperature: 0.1
+
+# Hyperparameters
+epochs: 500
+optimizer: sgd
+optimizer_kwargs:
+   nesterov: False
+   weight_decay: 0.0001
+   momentum: 0.9
+   lr: 0.5 #0.4
+scheduler: cosine
+scheduler_kwargs:
+   lr_decay_rate: 0.1
+batch_size: 98
+num_workers: 8
+use_patches: False
+patch_size: 32
+img_size: 256
+patch_overlap_scale: 1
+
+# Transformations degrees=(30, 70), translate=(0.1, 0.3), scale=(0.5, 0.75)
+augmentation_strategy: flowers
+augmentation_kwargs:
+#   random_resized_crop:
+#      size: 32
+#      scale: [0.2, 1.0]
+   p_flip: 0.5
+   p_affine: 0.5
+   color_jitter_random_apply:
+      p: 0.8
+   color_jitter:
+      brightness: 0.4
+      contrast: 0.4
+      saturation: 0.4
+      hue: 0.1
+   affine:
+      degrees: [0, 45]
+      translate: [0.0, 0.5]
+      scale_ranges: [0.5, 1.5] #[0.75, 1.25]
+      shears: [-30, 30, -30, 30] # null
+   random_grayscale:
+      p: 0.2
+   normalize:
+      mean: [0.4914, 0.4822, 0.4465]
+      std: [0.2023, 0.1994, 0.2010]
+
+transformation_kwargs:
+#   crop_size: 32
+   normalize:
+      mean: [0.485, 0.456, 0.406]
+      std: [0.229, 0.224, 0.225]

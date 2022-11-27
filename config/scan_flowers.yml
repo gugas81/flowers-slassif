@@ -1,0 +1,87 @@
+# setup
+setup: scan
+
+# Hyperparameters
+epochs: 200
+batch_size: 84
+num_workers: 8
+use_patches: False
+patch_size: 32
+img_size: 256
+patch_overlap_scale: 1
+multi_gpu: False
+
+#Optimizer
+optimizer: adam
+optimizer_kwargs:
+   lr: 0.0001 # 0.0001 0.00002 0.0001
+   weight_decay: 0.00005
+
+# Loss
+criterion: scan-weighted
+criterion_kwargs:
+   entropy_weight: 3.0
+   temperature: 0.1
+
+# Weight update
+update_cluster_head_only: True # Update full network in SCAN
+
+# Model
+backbone: resnet50
+heads_layers: 5 # 5
+norm_features: True
+num_heads: 1 # Only use one head
+contrastive_head: mlp
+contrastive_dim: 128
+from_contrastive: False
+
+# Dataset
+train_db_name: flowers-data
+val_db_name: flowers-data
+num_classes: 5
+num_neighbors: 8
+all_neighbors: True
+
+# Transformations
+augmentation_strategy: scan-flowers
+augmentation_kwargs:
+#   crop_size: 96
+
+#   num_strong_augs: 4
+#   cutout_kwargs:
+#     n_holes: 1
+#     length: 32
+#     random: True
+
+   p_flip: 0.5
+   p_affine: 0.5
+   color_jitter_random_apply:
+     p: 0.8
+   color_jitter:
+     brightness: 0.4
+     contrast: 0.4
+     saturation: 0.4
+     hue: 0.1
+
+   random_grayscale:
+     p: 0.2
+
+   affine:
+     degrees: [ 0, 30 ]
+     translate: [ 0.0, 0.3 ]
+     scale_ranges: [ 0.75, 1.25 ]
+     shears: null
+
+   normalize:
+     mean: [ 0.4914, 0.4822, 0.4465 ]
+     std: [ 0.2023, 0.1994, 0.2010 ]
+
+
+transformation_kwargs:
+#   crop_size: 96
+   normalize:
+      mean: [0.485, 0.456, 0.406]
+      std: [0.229, 0.224, 0.225]
+
+# Scheduler
+scheduler: constant
